@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+
+import sys
+
+import argparse
+
+import myutils
+
+import cpi_table
+
+# Script for inflation_calculator
+def get_args():
+    parser = argparse.ArgumentParser(description="Adjust for inflation")
+    parser.add_argument("-y", "--year", help="Year the amount is from (1913-2018)")
+    parser.add_argument("-a", "--amount", type=float, help="Amount in dollars")
+    parser.add_argument("-d", "--debug", action='store_true', help="Increased verbosity")
+
+    args = parser.parse_args()
+    return args.year, args.amount, args.debug
+
+
+
+
+def inflation_calculator( yester_year, yester_amount, debug = False ):
+    today_cpi = 257.971
+    yester_cpi = cpi_table.cpi_table[yester_year]
+
+    ratio = today_cpi/yester_cpi
+
+    return yester_amount * ratio
+
+
+if __name__ == '__main__':
+    year, amount, debug = get_args()   
+    adjusted_amount = inflation_calculator( year, amount, debug )
+    print( "That's worth ${:.2f} now.".format(adjusted_amount) )
